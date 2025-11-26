@@ -47,11 +47,6 @@ public class SysPhoneUrlMap extends TenantEntity {
      */
     private String shortcode;
 
-    /**
-     * 是否有效 0无效 1 有效
-     */
-    @TableLogic
-    private String delFlag;
 
     /**
      * 发送状态（0未发送 1已发送 2发送失败）

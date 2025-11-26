@@ -66,5 +66,7 @@ public class SysPhoneUrlMapVo implements Serializable {
     @ExcelDictFormat(dictType = "sys_sms_send")
     private String sendStatus;
 
+    @ExcelProperty(value = "创建时间")
+    private Date createTime;
 
 }

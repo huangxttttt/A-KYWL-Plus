@@ -57,6 +57,7 @@ public class SysPhoneUrlMapServiceImpl implements ISysPhoneUrlMapService {
     @Override
     public TableDataInfo<SysPhoneUrlMapVo> queryPageList(SysPhoneUrlMapBo bo, PageQuery pageQuery) {
         LambdaQueryWrapper<SysPhoneUrlMap> lqw = buildQueryWrapper(bo);
+        lqw.orderByDesc(SysPhoneUrlMap::getCreateTime);
         Page<SysPhoneUrlMapVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
         return TableDataInfo.build(result);
     }
@@ -112,6 +113,9 @@ public class SysPhoneUrlMapServiceImpl implements ISysPhoneUrlMapService {
     public Boolean updateByBo(SysPhoneUrlMapBo bo) {
         SysPhoneUrlMap update = MapstructUtils.convert(bo, SysPhoneUrlMap.class);
         validEntityBeforeSave(update);
+        String targetUrl = update.getTargetUrl();
+        String shortCode = generateShortCode(targetUrl);
+        update.setShortcode(StrUtil.toUpperCase(shortCode));
         return baseMapper.updateById(update) > 0;
     }
 

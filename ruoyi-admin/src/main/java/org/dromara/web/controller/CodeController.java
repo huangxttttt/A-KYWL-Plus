@@ -39,26 +39,12 @@ public class CodeController {
 
         // 1. 获取 IP
         String clientIp = StrUtil.trimToEmpty(ServletUtils.getClientIP());
+//        String clientIp = "203.0.113.10";
 
-        // ==================== 1️⃣ IP 拦截结果缓存 ====================
-        String ipCacheKey = "system:rule:ip:result:" + clientIp;
-
-        // 1.1 先从 Redis 拿结果
-        Boolean ipBlocked = RedisUtils.getCacheObject(ipCacheKey);
-        if (ipBlocked != null) {
-            if (Boolean.TRUE.equals(ipBlocked)) {
-                // 缓存里已经判定：该 IP 被拦截
-                return new RedirectView(fallbackUrl);
-            }
-            // 缓存里是 false，说明之前判定过“不拦截”，直接继续往下走 code 逻辑
-        } else {
-            // 1.2 没缓存，真正执行规则判断
-            boolean blocked = Boolean.TRUE.equals(sysBlockRuleService.checkRule(clientIp));
-            // 结果写入 Redis，TTL 比如 5分钟
-            RedisUtils.setCacheObject(ipCacheKey, blocked, Duration.ofMinutes(5));
-            if (blocked) {
-                return new RedirectView(fallbackUrl);
-            }
+        // 1.2 没缓存，真正执行规则判断
+        boolean blocked = Boolean.TRUE.equals(sysBlockRuleService.checkRule(clientIp));
+        if (blocked) {
+            return new RedirectView(fallbackUrl);
         }
 
         // ==================== 2️⃣ code → targetUrl 缓存 ====================

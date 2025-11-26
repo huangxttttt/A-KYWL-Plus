@@ -1,7 +1,15 @@
 package org.dromara.system.controller;
 
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.ClassPathResource;
+import cn.hutool.core.io.resource.Resource;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.idev.excel.EasyExcel;
 import cn.idev.excel.FastExcel;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +79,7 @@ public class SysPhoneUrlMapController extends BaseController {
     @SaCheckPermission("system:sms:query")
     @GetMapping("/{id}")
     public R<SysPhoneUrlMapVo> getInfo(@NotNull(message = "主键不能为空")
-                                     @PathVariable Long id) {
+                                       @PathVariable Long id) {
         return R.ok(sysPhoneUrlMapService.queryById(id));
     }
 
@@ -134,4 +142,35 @@ public class SysPhoneUrlMapController extends BaseController {
             return R.fail("导入失败：" + e.getMessage());
         }
     }
+
+    @SaCheckPermission("system:sms:import")
+    @Log(title = "模板下载", businessType = BusinessType.EXPORT)
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response) {
+        // 下载到浏览器时显示的文件名
+        String fileName = "短信映射导入模板.xlsx";
+        // resources 下的实际路径：src/main/resources/template/sms_import_template.xlsx
+        String classpathLocation = "template/sms_import_template.xlsx";
+
+        // 从 classpath 中读取模板文件流（Hutool）
+        try (InputStream in = ResourceUtil.getStream(classpathLocation)) {
+
+            // 设置响应头（Content-Type + Content-Disposition）
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8");
+
+            // 使用 Hutool 处理文件名编码，避免中文乱码
+            String encodedFileName = URLUtil.encode(fileName, StandardCharsets.UTF_8);
+            response.setHeader("Content-Disposition", "attachment;filename*=utf-8''" + encodedFileName);
+
+            // 使用 Hutool 工具进行流拷贝
+            IoUtil.copy(in, response.getOutputStream());
+        } catch (Exception e) {
+            // 这里可以换成你项目里的日志工具
+            // log.error("下载短信导入模板失败", e);
+            e.printStackTrace();
+        }
+    }
 }
+
+
