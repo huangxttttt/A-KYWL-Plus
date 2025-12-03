@@ -6,6 +6,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.common.core.constant.CacheConstants;
 import org.dromara.common.core.utils.ServletUtils;
 import org.dromara.common.redis.utils.RedisUtils;
 import org.dromara.system.domain.bo.SysPhoneUrlMapBo;
@@ -52,7 +53,7 @@ public class CodeController {
             return new RedirectView(fallbackUrl);
         }
 
-        String codeCacheKey = "system:shorturl:code:" + code;
+        String codeCacheKey = CacheConstants.SYSTEM_SHORTURL_CODE + code;
 
         // 2.1 先从 Redis 拿目标地址
         String targetUrl = RedisUtils.getCacheObject(codeCacheKey);

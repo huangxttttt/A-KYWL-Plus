@@ -8,6 +8,7 @@ import cn.hutool.setting.SettingUtil;
 import cn.idev.excel.util.IntUtils;
 import cn.idev.excel.util.MapUtils;
 import jakarta.annotation.PostConstruct;
+import org.dromara.common.core.constant.CacheConstants;
 import org.dromara.common.core.utils.MapstructUtils;
 import org.dromara.common.core.utils.StringUtils;
 import org.dromara.common.core.utils.ip.AddressUtils;
@@ -39,8 +40,7 @@ import java.util.*;
 @Service
 public class SysBlockRuleServiceImpl implements ISysBlockRuleService {
 
-    public static final String SYSTEM_RULE_CITY = "system:rule:city";
-    public static final String SYSTEM_RULE_IP = "system:rule:ip";
+
 
     private final SysBlockRuleMapper baseMapper;
 
@@ -178,7 +178,7 @@ public class SysBlockRuleServiceImpl implements ISysBlockRuleService {
             String address = AddressUtils.getRealAddressByIP(ip);
             if (StrUtil.isNotBlank(address)) {
                 List<String> addrs = StrUtil.split(address, '|');
-                Set<String> citySet = RedisUtils.getCacheSet(SYSTEM_RULE_CITY);
+                Set<String> citySet = RedisUtils.getCacheSet(CacheConstants.SYSTEM_RULE_CITY);
 
                 if (CollUtil.isNotEmpty(addrs) && CollUtil.isNotEmpty(citySet)) {
                     if (addrs.stream().anyMatch(citySet::contains)) {
@@ -194,7 +194,7 @@ public class SysBlockRuleServiceImpl implements ISysBlockRuleService {
                 return false;
             }
 
-            Map<String, Set<String>> ipCacheMap = RedisUtils.getCacheMap(SYSTEM_RULE_IP);
+            Map<String, Set<String>> ipCacheMap = RedisUtils.getCacheMap(CacheConstants.SYSTEM_RULE_IP);
             if (CollUtil.isEmpty(ipCacheMap)) {
                 return false;
             }
@@ -239,7 +239,7 @@ public class SysBlockRuleServiceImpl implements ISysBlockRuleService {
             case 1:
             case 2: {
                 // 从 Redis 取出一个可变 Map
-                Map<String, Object> cacheMap = RedisUtils.getCacheMap(SYSTEM_RULE_IP);
+                Map<String, Object> cacheMap = RedisUtils.getCacheMap(CacheConstants.SYSTEM_RULE_IP);
                 if (cacheMap == null) {
                     cacheMap = new HashMap<>();
                 } else if (!(cacheMap instanceof HashMap)) {
@@ -270,7 +270,7 @@ public class SysBlockRuleServiceImpl implements ISysBlockRuleService {
                 boolean changed = isAdd ? afterSet.add(afterIp) : afterSet.remove(afterIp);
                 if (changed) {
                     cacheMap.put(beforeIp, afterSet);
-                    RedisUtils.setCacheMap(SYSTEM_RULE_IP, cacheMap);
+                    RedisUtils.setCacheMap(CacheConstants.SYSTEM_RULE_IP, cacheMap);
                 }
                 break;
             }
@@ -279,7 +279,7 @@ public class SysBlockRuleServiceImpl implements ISysBlockRuleService {
             case 3:
             case 4:
             case 5: {
-                Set<String> cacheSet = RedisUtils.getCacheSet(SYSTEM_RULE_CITY);
+                Set<String> cacheSet = RedisUtils.getCacheSet(CacheConstants.SYSTEM_RULE_CITY);
                 if (cacheSet == null) {
                     cacheSet = new HashSet<>();
                 } else if (!(cacheSet instanceof HashSet)) {
@@ -301,7 +301,7 @@ public class SysBlockRuleServiceImpl implements ISysBlockRuleService {
 
                 boolean changed = isAdd ? cacheSet.add(country) : cacheSet.remove(country);
                 if (changed) {
-                    RedisUtils.setCacheSet(SYSTEM_RULE_CITY, cacheSet);
+                    RedisUtils.setCacheSet(CacheConstants.SYSTEM_RULE_CITY, cacheSet);
                 }
                 break;
             }

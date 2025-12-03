@@ -27,4 +27,20 @@ public interface CacheConstants {
      */
     String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
 
+    /**
+     * 存储城市黑名单
+     */
+    String SYSTEM_RULE_CITY = "system:rule:city";
+    /**
+     * 存储IP黑名单
+     */
+    String SYSTEM_RULE_IP = "system:rule:ip";
+
+
+    /**
+     * 存储短信Url
+     */
+    String SYSTEM_SHORTURL_CODE = "system:shorturl:code:";
+
+
 }
