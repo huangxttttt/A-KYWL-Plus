@@ -94,7 +94,12 @@ spring:
         maxLifetime: 1800000
         # 多久检查一次连接的活性
         keepaliveTime: 30000
-
+  minio:
+    url: ${MINIO_HOST:http://192.168.174.129:19000}
+    bucket: kywl
+    access-key: ${MINIO_NAME:minio}
+    secret-key: ${MINIO_PASSWORD:easymer@minio@2023}
+    url-prefix: ${MINIO_PREFIX:http://192.168.174.129:19000/kywl/}
 --- # redis 单机配置(单机与集群只能开启一个另一个需要注释掉)
 spring.data:
   redis:

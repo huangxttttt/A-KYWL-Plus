@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.core.constant.CacheConstants;
 import org.dromara.common.core.utils.ServletUtils;
+import org.dromara.common.log.annotation.Log;
+import org.dromara.common.log.enums.BusinessType;
 import org.dromara.common.redis.utils.RedisUtils;
 import org.dromara.system.domain.bo.SysPhoneUrlMapBo;
 import org.dromara.system.domain.vo.SysPhoneUrlMapVo;
@@ -33,6 +35,8 @@ public class CodeController {
     @Value("${cywl.mall-url}")
     private String url;
 
+
+    @Log(title = "业务访问", businessType = BusinessType.OTHER)
     @GetMapping("/redirect/{code}")
     public RedirectView redirectByCode(@PathVariable String code) {
         // 兜底地址（商场首页之类）
@@ -83,7 +87,6 @@ public class CodeController {
         // 2.3 查不到 / 异常 → 兜底
         return new RedirectView(fallbackUrl);
     }
-
 
 
 }
