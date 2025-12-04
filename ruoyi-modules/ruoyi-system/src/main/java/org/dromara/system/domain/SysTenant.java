@@ -1,8 +1,6 @@
 package org.dromara.system.domain;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import org.dromara.common.mybatis.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -94,10 +92,21 @@ public class SysTenant extends BaseEntity {
      */
     private String status;
 
+
     /**
      * 删除标志（0代表存在 1代表删除）
      */
     @TableLogic
     private String delFlag;
+    /**
+     * 短信映射时间
+     */
+    private Date proxyTime;
+
+
+    /**
+     * 短信映射状态（0正常 1停用）
+     */
+    private String smsProxy;
 
 }

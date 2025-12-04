@@ -125,6 +125,17 @@ public class SysTenantController extends BaseController {
         return toAjax(tenantService.updateTenantStatus(bo));
     }
 
+
+    @SaCheckRole(TenantConstants.SUPER_ADMIN_ROLE_KEY)
+    @SaCheckPermission("system:tenant:edit")
+    @Log(title = "租户管理", businessType = BusinessType.UPDATE)
+    @RepeatSubmit()
+    @PutMapping("/changeProxyStatus")
+    public R<Void> changeProxyStatus(@RequestBody SysTenantBo bo) {
+        tenantService.checkTenantAllowed(bo.getTenantId());
+        return toAjax(tenantService.updateTenantProxyStatus(bo));
+    }
+
     /**
      * 删除租户
      *

@@ -302,6 +302,21 @@ public class SysTenantServiceImpl implements ISysTenantService {
     }
 
     /**
+     * 修改租户短信映射状态
+     *
+     * @param bo
+     * @return
+     */
+    @CacheEvict(cacheNames = CacheNames.SYS_TENANT, key = "#bo.tenantId")
+    @Override
+    public int updateTenantProxyStatus(SysTenantBo bo) {
+        SysTenant tenant = new SysTenant();
+        tenant.setId(bo.getId());
+        tenant.setSmsProxy(bo.getSmsProxy());
+        return baseMapper.updateById(tenant);
+    }
+
+    /**
      * 校验租户是否允许操作
      *
      * @param tenantId 租户ID

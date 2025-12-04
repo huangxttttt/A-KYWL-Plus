@@ -41,6 +41,7 @@ public interface CacheNames {
      */
     String SYS_TENANT = GlobalConstants.GLOBAL_REDIS_KEY + "sys_tenant#30d";
 
+
     /**
      * 客户端
      */

@@ -276,4 +276,4 @@ justauth:
       redirect-uri: ${justauth.address}/social-callback?source=gitea
 
 cywl:
-  mall-url: "https://www.baidu.com"
+  mall-url: "http://www.kywl.fj.cn/mall"

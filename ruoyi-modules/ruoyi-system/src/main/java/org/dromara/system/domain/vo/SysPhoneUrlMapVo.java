@@ -69,4 +69,10 @@ public class SysPhoneUrlMapVo implements Serializable {
     @ExcelProperty(value = "创建时间")
     private Date createTime;
 
+
+    /**
+     * 租户编号
+     */
+    private String tenantId;
+
 }

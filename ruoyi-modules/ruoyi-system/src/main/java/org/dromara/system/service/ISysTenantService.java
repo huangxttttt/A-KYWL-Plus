@@ -51,6 +51,13 @@ public interface ISysTenantService {
     int updateTenantStatus(SysTenantBo bo);
 
     /**
+     * 修改租户短信映射转台
+     * @param bo
+     * @return
+     */
+    int updateTenantProxyStatus(SysTenantBo bo);
+
+    /**
      * 校验租户是否允许操作
      */
     void checkTenantAllowed(String tenantId);
