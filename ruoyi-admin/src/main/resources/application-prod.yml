@@ -1,10 +1,7 @@
---- # 临时文件存储位置 避免临时文件被系统清理报错
-spring.servlet.multipart.location: /ruoyi/server/temp
-
 --- # 监控中心配置
 spring.boot.admin.client:
   # 增加客户端开关
-  enabled: true
+  enabled: false
   url: http://localhost:9090/admin
   instance:
     service-host-type: IP
@@ -16,10 +13,10 @@ spring.boot.admin.client:
 
 --- # snail-job 配置
 snail-job:
-  enabled: true
+  enabled: false
   # 需要在 SnailJob 后台组管理创建对应名称的组,然后创建任务的时候选择对应的组,才能正确分派任务
   group: "ruoyi_group"
-  # SnailJob 接入验证令牌 详见 script/sql/ry_job.sql `sj_group_config`表
+  # SnailJob 接入验证令牌 详见 script/sql/ry_job.sql `sj_group_config` 表
   token: "SJ_cKqBTPzCsWA3VyuCfFoccmuIEGXjr5KT"
   server:
     host: 127.0.0.1
@@ -38,7 +35,7 @@ spring:
     # 动态数据源文档 https://www.kancloud.cn/tracy5546/dynamic-datasource/content
     dynamic:
       # 性能分析插件(有性能损耗 不建议生产环境使用)
-      p6spy: false
+      p6spy: true
       # 设置默认的数据源或者数据源组,默认值即为 master
       primary: master
       # 严格模式 匹配不到数据源则报错
@@ -50,35 +47,35 @@ spring:
           driverClassName: com.mysql.cj.jdbc.Driver
           # jdbc 所有参数配置参考 https://lionli.blog.csdn.net/article/details/122018562
           # rewriteBatchedStatements=true 批处理优化 大幅提升批量插入更新删除性能(对数据库有性能损耗 使用批量操作应考虑性能问题)
-          url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
-          username: root
-          password: root
-#        # 从库数据源
-#        slave:
-#          lazy: true
-#          type: ${spring.datasource.type}
-#          driverClassName: com.mysql.cj.jdbc.Driver
-#          url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
-#          username:
-#          password:
-#        oracle:
-#          type: ${spring.datasource.type}
-#          driverClassName: oracle.jdbc.OracleDriver
-#          url: jdbc:oracle:thin:@//localhost:1521/XE
-#          username: ROOT
-#          password: root
-#        postgres:
-#          type: ${spring.datasource.type}
-#          driverClassName: org.postgresql.Driver
-#          url: jdbc:postgresql://localhost:5432/postgres?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true
-#          username: root
-#          password: root
-#        sqlserver:
-#          type: ${spring.datasource.type}
-#          driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-#          url: jdbc:sqlserver://localhost:1433;DatabaseName=tempdb;SelectMethod=cursor;encrypt=false;rewriteBatchedStatements=true
-#          username: SA
-#          password: root
+          url: jdbc:mysql://${MYSQL_HOST:192.168.174.129}:${MYSQL_PORT:3307}/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+          username: ${MYSQL_USERNAME:root}
+          password: ${MYSQL_PASSWORD:galaxy@pw@789}
+      #        # 从库数据源
+      #        slave:
+      #          lazy: true
+      #          type: ${spring.datasource.type}
+      #          driverClassName: com.mysql.cj.jdbc.Driver
+      #          url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+      #          username:
+      #          password:
+      #        oracle:
+      #          type: ${spring.datasource.type}
+      #          driverClassName: oracle.jdbc.OracleDriver
+      #          url: jdbc:oracle:thin:@//localhost:1521/XE
+      #          username: ROOT
+      #          password: root
+      #        postgres:
+      #          type: ${spring.datasource.type}
+      #          driverClassName: org.postgresql.Driver
+      #          url: jdbc:postgresql://localhost:5432/postgres?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true
+      #          username: root
+      #          password: root
+      #        sqlserver:
+      #          type: ${spring.datasource.type}
+      #          driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      #          url: jdbc:sqlserver://localhost:1433;DatabaseName=tempdb;SelectMethod=cursor;encrypt=false;rewriteBatchedStatements=true
+      #          username: SA
+      #          password: root
       hikari:
         # 最大连接池数量
         maxPoolSize: 20
@@ -100,17 +97,18 @@ spring:
     access-key: ${MINIO_NAME:minio}
     secret-key: ${MINIO_PASSWORD:easymer@minio@2023}
     url-prefix: ${MINIO_PREFIX:http://192.168.174.129:19000/kywl/}
+
 --- # redis 单机配置(单机与集群只能开启一个另一个需要注释掉)
 spring.data:
   redis:
     # 地址
-    host: localhost
+    host: ${REDIS_HOST:192.168.174.129}
     # 端口，默认为6379
-    port: 6379
+    port: ${REDIS_PORT:6379}
     # 数据库索引
     database: 0
     # redis 密码必须配置
-    password: ruoyi123
+    password: ${REDIS_PASSWORD:easymer@redis@2023}
     # 连接超时时间
     timeout: 10s
     # 是否开启ssl
@@ -193,6 +191,7 @@ sms:
       signature: 您的短信签名
       sdk-app-id: 您的sdkAppId
 
+
 --- # 三方授权
 justauth:
   # 前端外网访问地址
@@ -207,11 +206,11 @@ justauth:
       redirect-uri: ${justauth.address}/social-callback?source=maxkey
     topiam:
       # topiam 服务器地址
-      server-url: http://127.0.0.1:1989/api/v1/authorize/y0q************spq***********8ol
+      server-url: http://127.0.0.1:1898/api/v1/authorize/y0q************spq***********8ol
       client-id: 449c4*********937************759
       client-secret: ac7***********1e0************28d
       redirect-uri: ${justauth.address}/social-callback?source=topiam
-      scopes: [ openid, email, phone, profile ]
+      scopes: [openid, email, phone, profile]
     qq:
       client-id: 10**********6
       client-secret: 1f7d08**********5b7**********29e
@@ -275,3 +274,6 @@ justauth:
       client-id: 10**********6
       client-secret: 1f7d08**********5b7**********29e
       redirect-uri: ${justauth.address}/social-callback?source=gitea
+
+cywl:
+  mall-url: "http://www.kywl.fj.cn/mall"

@@ -35,7 +35,7 @@ spring:
     # 动态数据源文档 https://www.kancloud.cn/tracy5546/dynamic-datasource/content
     dynamic:
       # 性能分析插件(有性能损耗 不建议生产环境使用)
-      p6spy: true
+      p6spy: false
       # 设置默认的数据源或者数据源组,默认值即为 master
       primary: master
       # 严格模式 匹配不到数据源则报错
@@ -47,9 +47,9 @@ spring:
           driverClassName: com.mysql.cj.jdbc.Driver
           # jdbc 所有参数配置参考 https://lionli.blog.csdn.net/article/details/122018562
           # rewriteBatchedStatements=true 批处理优化 大幅提升批量插入更新删除性能(对数据库有性能损耗 使用批量操作应考虑性能问题)
-          url: jdbc:mysql://192.168.174.129:3307/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
-          username: root
-          password: galaxy@pw@789
+          url: jdbc:mysql://${MYSQL_HOST:192.168.174.129}:${MYSQL_PORT:3307}/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+          username: ${MYSQL_USERNAME:root}
+          password: ${MYSQL_PASSWORD:galaxy@pw@789}
 #        # 从库数据源
 #        slave:
 #          lazy: true
@@ -102,13 +102,13 @@ spring:
 spring.data:
   redis:
     # 地址
-    host: 192.168.174.129
+    host: ${REDIS_HOST:192.168.174.129}
     # 端口，默认为6379
-    port: 6379
+    port: ${REDIS_PORT:6379}
     # 数据库索引
     database: 0
     # redis 密码必须配置
-    password: easymer@redis@2023
+    password: ${REDIS_PASSWORD:easymer@redis@2023}
     # 连接超时时间
     timeout: 10s
     # 是否开启ssl
