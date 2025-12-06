@@ -92,10 +92,14 @@ public class LogAspect {
             String ip = ServletUtils.getClientIP();
             operLog.setOperIp(ip);
             operLog.setOperUrl(StringUtils.substring(ServletUtils.getRequest().getRequestURI(), 0, 255));
-            LoginUser loginUser = LoginHelper.getLoginUser();
-            operLog.setOperName(loginUser.getUsername());
-            operLog.setDeptName(loginUser.getDeptName());
-
+            LoginUser loginUser = null;
+            try {
+                loginUser = LoginHelper.getLoginUser();
+                operLog.setOperName(loginUser.getUsername());
+                operLog.setDeptName(loginUser.getDeptName());
+            } catch (Exception ex) {
+               log.info("无token访问：{}" ,ex.getMessage());
+            }
             if (e != null) {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
                 operLog.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 3800));

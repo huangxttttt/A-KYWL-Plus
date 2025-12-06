@@ -2,6 +2,8 @@ package org.dromara.web.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -103,8 +106,11 @@ public class CodeController {
                 //停用映射
                 return new RedirectView(fallbackUrl);
             }
-            Date proxyTime = sysTenantVo.getProxyTime();
-            if (new Date().before(proxyTime) || proxyTime == null) {
+            String proxyTime = sysTenantVo.getProxyTime();
+            String proxyTimeEnd = sysTenantVo.getProxyTimeEnd();
+            //判断是否在映射时间内
+            boolean currentTimeInRange = isCurrentTimeInRange(proxyTime, proxyTimeEnd);
+            if (!currentTimeInRange) {
                 return new RedirectView(fallbackUrl);
             }
             //跳转最终地址
@@ -115,6 +121,26 @@ public class CodeController {
 
         // 2.3 查不到 / 异常 → 兜底
         return new RedirectView(fallbackUrl);
+    }
+
+    private boolean isCurrentTimeInRange(String startTime, String endTime) {
+        // 获取当前时间（只取时分秒）
+        DateTime currentTime = DateUtil.date(); // 获取当前时间的 DateTime 对象
+        String currentTimeStr = DateUtil.format(currentTime, "HH:mm:ss"); // 格式化为 HH:mm:ss
+
+        // 将开始时间和结束时间解析为 DateTime 对象，只关心时间部分
+        DateTime start = DateUtil.parse(startTime, "HH:mm:ss");
+        DateTime end = DateUtil.parse(endTime, "HH:mm:ss");
+        DateTime current = DateUtil.parse(currentTimeStr, "HH:mm:ss");
+
+        // 判断时间段是否跨越午夜（即结束时间早于开始时间）
+        if (start.isAfter(end)) {
+            // 如果跨越午夜，判断当前时间是否在两个时间点之间
+            return current.isAfter(start) || current.isBefore(end);
+        } else {
+            // 否则正常判断
+            return current.isAfter(start) && current.isBefore(end);
+        }
     }
 
 

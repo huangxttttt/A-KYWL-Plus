@@ -117,9 +117,13 @@ public class SysTenantVo implements Serializable {
      * 短信映射时间
      */
     @ExcelProperty(value = "短信映射时间")
-    private Date proxyTime;
+    private String proxyTime;
 
-
+    /**
+     * 短信映射时间
+     */
+    @ExcelProperty(value = "短信映射时间")
+    private String proxyTimeEnd;
     /**
      * 短信映射状态（0正常 1停用）
      */

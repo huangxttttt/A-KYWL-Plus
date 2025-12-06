@@ -116,7 +116,12 @@ public class SysTenantBo extends BaseEntity {
     /**
      * 短信映射时间
      */
-    private Date proxyTime;
+    private String proxyTime;
+
+    /**
+     * 短信映射时间
+     */
+    private String proxyTimeEnd;
 
 
     /**
