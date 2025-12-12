@@ -28,16 +28,6 @@ public class SysPhoneUrlMap extends TenantEntity {
     private Long id;
 
     /**
-     * 用户账号
-     */
-    private String userName;
-
-    /**
-     * 电话号码（E.164格式）
-     */
-    private String phoneNumber;
-
-    /**
      * 目标URL
      */
     private String targetUrl;
@@ -47,11 +37,10 @@ public class SysPhoneUrlMap extends TenantEntity {
      */
     private String shortcode;
 
-
     /**
-     * 发送状态（0未发送 1已发送 2发送失败）
+     * 审核标志（0待审核 1已通过）
      */
-    private String sendStatus;
+    private String auditFlag;
 
 
 }

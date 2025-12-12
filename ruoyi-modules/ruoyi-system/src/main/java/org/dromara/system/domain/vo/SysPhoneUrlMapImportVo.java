@@ -8,15 +8,15 @@ import cn.idev.excel.annotation.ExcelProperty;
 @Data
 public class SysPhoneUrlMapImportVo {
 
-    /** 用户账号 */
-    @ExcelProperty("用户账号")
-    private String userName;
-
-    /** 手机号码（E.164格式） */
-    @ExcelProperty("手机号码")
-    private String phoneNumber;
-
     /** 目标URL */
     @ExcelProperty("目标URL")
     private String targetUrl;
+
+    /** URL 短编码 */
+    @ExcelProperty("短码")
+    private String shortcode;
+
+    /** 审核标志（0待审核 1已通过） */
+    @ExcelProperty("审核标志")
+    private String auditFlag;
 }

@@ -73,4 +73,13 @@ public interface ISysPhoneUrlMapService {
      * 根据导入的 Excel 数据批量新增
      */
     int importPhoneUrlMaps(List<SysPhoneUrlMapImportVo> importList);
+
+    /**
+     * 更新审核状态
+     *
+     * @param id        主键
+     * @param auditFlag 审核标志（0 待审核，1 已通过）
+     * @return 是否更新成功
+     */
+    Boolean updateAuditFlag(Long id, String auditFlag);
 }
