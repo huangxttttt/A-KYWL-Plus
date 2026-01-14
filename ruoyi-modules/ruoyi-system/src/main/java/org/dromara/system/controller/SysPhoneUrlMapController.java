@@ -106,6 +106,18 @@ public class SysPhoneUrlMapController extends BaseController {
     }
 
     /**
+     * 审核短信映射
+     */
+    @SaCheckPermission("system:sms:audit")
+    @Log(title = "短信映射", businessType = BusinessType.UPDATE)
+    @RepeatSubmit()
+    @PutMapping("/{id}/audit/{auditFlag}")
+    public R<Void> audit(@NotNull(message = "主键不能为空") @PathVariable Long id,
+                         @NotBlank(message = "审核标志不能为空") @PathVariable String auditFlag) {
+        return toAjax(sysPhoneUrlMapService.updateAuditFlag(id, auditFlag));
+    }
+
+    /**
      * 删除短信映射
      *
      * @param ids 主键串

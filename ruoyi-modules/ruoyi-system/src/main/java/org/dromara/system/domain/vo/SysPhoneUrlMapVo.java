@@ -35,19 +35,6 @@ public class SysPhoneUrlMapVo implements Serializable {
     private Long id;
 
     /**
-     * 用户账号
-     */
-    @ExcelProperty(value = "用户账号")
-    private String userName;
-
-    /**
-     * 电话号码（E.164格式）
-     */
-    @ExcelProperty(value = "电话号码", converter = ExcelDictConvert.class)
-    @ExcelDictFormat(readConverterExp = "E=.164格式")
-    private String phoneNumber;
-
-    /**
      * 目标URL
      */
     @ExcelProperty(value = "目标URL")
@@ -60,11 +47,10 @@ public class SysPhoneUrlMapVo implements Serializable {
     private String shortcode;
 
     /**
-     * 发送状态（0未发送 1已发送 2发送失败）
+     * 审核标志（0待审核 1已通过）
      */
-    @ExcelProperty(value = "发送状态", converter = ExcelDictConvert.class)
-    @ExcelDictFormat(dictType = "sys_sms_send")
-    private String sendStatus;
+    @ExcelProperty(value = "审核标志")
+    private String auditFlag;
 
     @ExcelProperty(value = "创建时间")
     private Date createTime;
