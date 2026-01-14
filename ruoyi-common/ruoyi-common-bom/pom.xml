@@ -179,6 +179,13 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!-- CMPP2.0模块 -->
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>kywl-common-cmpp</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

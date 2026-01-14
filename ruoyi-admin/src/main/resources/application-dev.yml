@@ -277,3 +277,11 @@ justauth:
 
 cywl:
   mall-url: "http://www.kywl.fj.cn/mall"
+
+cmpp:
+  host: 127.0.0.1
+  port: 7890
+  spId: 123456
+  sharedSecret: 123456
+  version: 0x20
+  serviceId: SMS001
