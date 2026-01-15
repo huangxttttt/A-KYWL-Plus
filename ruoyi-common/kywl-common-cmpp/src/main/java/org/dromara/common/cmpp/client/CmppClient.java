@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.cmpp.config.CmppProperties;
 import org.dromara.common.cmpp.protocol.CmppMessageListener;
@@ -15,7 +16,9 @@ import org.dromara.common.cmpp.protocol.send.CmppCancel;
 import org.dromara.common.cmpp.protocol.send.CmppTerminate;
 import org.dromara.common.cmpp.protocol.send.CmppActiveTest;
 import org.dromara.common.cmpp.util.SequenceId;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 
@@ -26,13 +29,16 @@ import java.util.List;
 public class CmppClient {
 
     private final CmppProperties cmppProperties;  // 用于读取配置
+    private final CmppClientHandler cmppClientHandler;  // 用于读取配置
 
     private EventLoopGroup group;
     private Channel channel;
 
+
     @Autowired
-    public CmppClient(CmppProperties cmppProperties) {
+    public CmppClient(CmppProperties cmppProperties, CmppClientHandler cmppClientHandler) {
         this.cmppProperties = cmppProperties;
+        this.cmppClientHandler = cmppClientHandler;
     }
 
     /**
@@ -50,7 +56,7 @@ public class CmppClient {
             .handler(new ChannelInitializer<Channel>() {
                 @Override
                 protected void initChannel(Channel ch) {
-                    ch.pipeline().addLast(new CmppClientHandler(null));  // 添加处理器（你自己的 handler）
+                    ch.pipeline().addLast(cmppClientHandler);  // 添加处理器（你自己的 handler）
                 }
             });
 

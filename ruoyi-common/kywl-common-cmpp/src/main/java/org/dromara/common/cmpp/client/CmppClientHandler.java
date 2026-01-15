@@ -1,8 +1,10 @@
 package org.dromara.common.cmpp.client;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.cmpp.constant.CommandIdConstant;
 import org.dromara.common.cmpp.protocol.CmppHandler;
@@ -11,15 +13,24 @@ import org.dromara.common.cmpp.protocol.resp.CmppActiveTestResp;
 import org.dromara.common.cmpp.protocol.resp.bo.*;
 import org.dromara.common.cmpp.protocol.send.CmppDeliverResp;
 import org.dromara.common.cmpp.util.SequenceId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
+@ChannelHandler.Sharable
 public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
-    private final CmppMessageListener listener;
+    @Autowired
+    private CmppMessageListener cmppMessageListener;
 
-    public CmppClientHandler(CmppMessageListener listener) {
-        this.listener = listener;
-    }
+   /* private static CmppClientHandler clientHandler;
+
+
+    @PostConstruct
+    public void init() {
+        clientHandler = this;
+    }*/
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf frame) throws Exception {
@@ -72,6 +83,7 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
         log.info("收到 CMPP_CANCEL_RESP seq={} success={}",
             header.getSequenceId(), resp.getSuccessId());
+        cmppMessageListener.onCancelResp(resp);
     }
 
 
@@ -95,6 +107,8 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
         } else {
             log.info("登录成功，开始正常收发");
         }
+
+        cmppMessageListener.onConnectResp(resp);
     }
 
 
@@ -120,6 +134,7 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
         log.info("收到 CMPP_QUERY_RESP seq={} result={}",
             header.getSequenceId(), resp);
+        cmppMessageListener.onQueryResp(resp);
     }
 
 
@@ -162,6 +177,7 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
             //SUBMIT_RESP.Msg_Id
             // TODO: 根据 report.getStat() 更新你库里这条短信的状态
             //subimt之后，submitresp会返回msg_id，我可以将这个id更新到我的短信记录中，然后收到报告的时候也会收到msgid，这个id与之前submitresp收到的id一样，所以我可以利用这个作为关联更新短信状态
+
         } else {
             // 上行短信（MO）
             String content;
@@ -178,6 +194,7 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
             // TODO: 把上行转给你的业务系统
         }
+        cmppMessageListener.onDeliver(deliver);
 
         // ⭐ 必须回 DELIVER_RESP
         int seq = SequenceId.next();
@@ -191,6 +208,7 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
         // ACTIVE_TEST 无消息体，直接回 RESP 即可
         int seq = SequenceId.next();
         ctx.writeAndFlush(CmppActiveTestResp.build(seq));
+        cmppMessageListener.onActiveTest();
     }
 
     private void handleActiveTestResp(ChannelHandlerContext ctx,
@@ -217,6 +235,7 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
         // 这里可以用 sequenceId 或 msgId 去唤醒你之前发送那条短信对应的 Future
         // pendingMap.remove(header.getSequenceId()).complete(resp);
+        cmppMessageListener.onSubmitResp(resp);
     }
 
 
@@ -258,7 +277,6 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
         buf.release();
         return r;
     }
-
 
 
     @Override
