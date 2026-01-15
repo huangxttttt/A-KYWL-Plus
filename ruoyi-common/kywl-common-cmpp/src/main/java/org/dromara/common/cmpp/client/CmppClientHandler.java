@@ -6,6 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.cmpp.constant.CommandIdConstant;
 import org.dromara.common.cmpp.protocol.CmppHandler;
+import org.dromara.common.cmpp.protocol.CmppMessageListener;
 import org.dromara.common.cmpp.protocol.resp.CmppActiveTestResp;
 import org.dromara.common.cmpp.protocol.resp.bo.*;
 import org.dromara.common.cmpp.protocol.send.CmppDeliverResp;
@@ -13,6 +14,12 @@ import org.dromara.common.cmpp.util.SequenceId;
 
 @Slf4j
 public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
+
+    private final CmppMessageListener listener;
+
+    public CmppClientHandler(CmppMessageListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf frame) throws Exception {
@@ -152,8 +159,9 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
             CmppDeliverBody.CmppReport report = parseReport(msgBytes);
             deliver.setReport(report);
             log.info("收到状态报告 seq={} report={}", header.getSequenceId(), report);
-
+            //SUBMIT_RESP.Msg_Id
             // TODO: 根据 report.getStat() 更新你库里这条短信的状态
+            //subimt之后，submitresp会返回msg_id，我可以将这个id更新到我的短信记录中，然后收到报告的时候也会收到msgid，这个id与之前submitresp收到的id一样，所以我可以利用这个作为关联更新短信状态
         } else {
             // 上行短信（MO）
             String content;

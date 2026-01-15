@@ -7,6 +7,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.cmpp.config.CmppProperties;
+import org.dromara.common.cmpp.protocol.CmppMessageListener;
 import org.dromara.common.cmpp.protocol.send.CmppConnect;
 import org.dromara.common.cmpp.protocol.send.CmppSubmit;
 import org.dromara.common.cmpp.protocol.send.CmppQuery;
@@ -38,6 +39,7 @@ public class CmppClient {
      * 启动 CMPP 客户端，连接到 ISMG（运营商短信网关）
      */
     public void start() {
+
         // 创建 NIO 线程池，Netty 需要使用 EventLoopGroup 来处理事件
         this.group = new NioEventLoopGroup();
 
@@ -48,7 +50,7 @@ public class CmppClient {
             .handler(new ChannelInitializer<Channel>() {
                 @Override
                 protected void initChannel(Channel ch) {
-                    ch.pipeline().addLast(new CmppClientHandler());  // 添加处理器（你自己的 handler）
+                    ch.pipeline().addLast(new CmppClientHandler(null));  // 添加处理器（你自己的 handler）
                 }
             });
 

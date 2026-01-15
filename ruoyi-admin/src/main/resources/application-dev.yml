@@ -285,3 +285,6 @@ cmpp:
   sharedSecret: 123456
   version: 0x20
   serviceId: SMS001
+  fee-type: 05
+  fee-code: 000000
+  src-id: 106858510313
