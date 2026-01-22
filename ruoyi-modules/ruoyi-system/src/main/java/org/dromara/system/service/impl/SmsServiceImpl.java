@@ -1,5 +1,6 @@
 package org.dromara.system.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.cmpp.protocol.CmppMessageListener;
 import org.dromara.common.cmpp.protocol.resp.bo.*;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SmsServiceImpl implements CmppMessageListener {
     @Override
     public void onConnectResp(CmppConnectRespBody resp) {

@@ -37,10 +37,15 @@ public class SysPhoneUrlMap extends TenantEntity {
      */
     private String shortcode;
 
-    /**
-     * 审核标志（0待审核 1已通过）
-     */
-    private String auditFlag;
 
+    private String msgId;
+
+    private String phoneNumber;
+
+
+    /**
+     * 发送状态（0未发送 1已发送 2发送失败）
+     */
+    private String  sendStatus;
 
 }

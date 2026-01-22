@@ -46,11 +46,7 @@ public class SysPhoneUrlMapVo implements Serializable {
     @ExcelProperty(value = "短码")
     private String shortcode;
 
-    /**
-     * 审核标志（0待审核 1已通过）
-     */
-    @ExcelProperty(value = "审核标志")
-    private String auditFlag;
+
 
     @ExcelProperty(value = "创建时间")
     private Date createTime;
@@ -60,5 +56,16 @@ public class SysPhoneUrlMapVo implements Serializable {
      * 租户编号
      */
     private String tenantId;
+
+
+
+    private String msgId;
+
+    private String phoneNumber;
+
+    /**
+     * 发送状态（0未发送 1已发送 2发送失败）
+     */
+    private String  sendStatus;
 
 }

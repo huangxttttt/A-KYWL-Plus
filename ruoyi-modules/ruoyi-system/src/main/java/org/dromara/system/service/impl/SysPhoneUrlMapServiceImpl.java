@@ -81,7 +81,6 @@ public class SysPhoneUrlMapServiceImpl implements ISysPhoneUrlMapService {
         lqw.orderByAsc(SysPhoneUrlMap::getId);
         lqw.eq(StringUtils.isNotBlank(bo.getTargetUrl()), SysPhoneUrlMap::getTargetUrl, bo.getTargetUrl());
         lqw.eq(StringUtils.isNotBlank(bo.getShortcode()), SysPhoneUrlMap::getShortcode, bo.getShortcode());
-        lqw.eq(StringUtils.isNotBlank(bo.getAuditFlag()), SysPhoneUrlMap::getAuditFlag, bo.getAuditFlag());
         return lqw;
     }
 
@@ -95,9 +94,7 @@ public class SysPhoneUrlMapServiceImpl implements ISysPhoneUrlMapService {
     public Boolean insertByBo(SysPhoneUrlMapBo bo) {
         SysPhoneUrlMap add = MapstructUtils.convert(bo, SysPhoneUrlMap.class);
         normalizeShortCode(add);
-        if (StrUtil.isBlank(add.getAuditFlag())) {
-            add.setAuditFlag("0");
-        }
+
         validEntityBeforeSave(add);
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
@@ -169,7 +166,6 @@ public class SysPhoneUrlMapServiceImpl implements ISysPhoneUrlMapService {
             SysPhoneUrlMap entity = new SysPhoneUrlMap();
             entity.setTargetUrl(vo.getTargetUrl());
             entity.setShortcode(StrUtil.toUpperCase(vo.getShortcode()));
-            entity.setAuditFlag(StrUtil.blankToDefault(vo.getAuditFlag(), "0"));
 
             try {
                 validEntityBeforeSave(entity);
@@ -204,7 +200,6 @@ public class SysPhoneUrlMapServiceImpl implements ISysPhoneUrlMapService {
         if (current == null) {
             throw new ServiceException("记录不存在或已删除");
         }
-        current.setAuditFlag(auditFlag);
         return baseMapper.updateById(current) > 0;
     }
 }

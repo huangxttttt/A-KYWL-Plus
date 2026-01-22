@@ -35,7 +35,7 @@ public class CmppClient {
     private Channel channel;
 
 
-    @Autowired
+
     public CmppClient(CmppProperties cmppProperties, CmppClientHandler cmppClientHandler) {
         this.cmppProperties = cmppProperties;
         this.cmppClientHandler = cmppClientHandler;

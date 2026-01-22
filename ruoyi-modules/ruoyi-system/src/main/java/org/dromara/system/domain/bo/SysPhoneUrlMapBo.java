@@ -38,11 +38,16 @@ public class SysPhoneUrlMapBo extends BaseEntity {
     @NotBlank(message = "短码不能为空", groups = { AddGroup.class, EditGroup.class })
     private String shortcode;
 
+
+
+    private String msgId;
+
+    private String phoneNumber;
+
     /**
-     * 审核标志（0待审核 1已通过）
+     * 发送状态（0未发送 1已发送 2发送失败）
      */
-    @NotBlank(message = "审核标志不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String auditFlag;
+    private String  sendStatus;
 
 
 }
