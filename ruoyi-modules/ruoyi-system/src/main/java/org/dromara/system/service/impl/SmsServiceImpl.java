@@ -46,6 +46,11 @@ public class SmsServiceImpl implements CmppMessageListener {
     }
 
     @Override
+    public void onActiveTestResp() {
+        log.info("onActiveTestResp");
+    }
+
+    @Override
     public void onError(Throwable t) {
         log.error("onError");
     }

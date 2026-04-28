@@ -40,6 +40,11 @@ public interface CmppMessageListener {
     void onActiveTest();
 
     /**
+     *  心跳 回复
+     */
+    void onActiveTestResp();
+
+    /**
      * 其他异常
      */
     void onError(Throwable t);

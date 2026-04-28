@@ -208,7 +208,7 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
         // ACTIVE_TEST 无消息体，直接回 RESP 即可
         int seq = SequenceId.next();
         ctx.writeAndFlush(CmppActiveTestResp.build(seq));
-        cmppMessageListener.onActiveTest();
+//        cmppMessageListener.onActiveTest();
     }
 
     private void handleActiveTestResp(ChannelHandlerContext ctx,
@@ -219,6 +219,7 @@ public class CmppClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
             body.readByte();
         }
         log.debug("收到 ACTIVE_TEST_RESP seq={}", header.getSequenceId());
+        cmppMessageListener.onActiveTestResp();
     }
 
 
